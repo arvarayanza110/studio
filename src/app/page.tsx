@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react';
-import type { ChartData } from '@/lib/types';
+import type { CommandLog } from '@/lib/types';
 
 import DashboardHeader from '@/components/dashboard-header';
 import ControlPanel from '@/components/dashboard/control-panel';
@@ -12,11 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 export default function DashboardPage() {
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [robotStatus, setRobotStatus] = useState<string>('Connecting...');
-  const [chartData, setChartData] = useState<ChartData[]>([
-    { color: 'Blue', count: 0 },
-    { color: 'Green', count: 0 },
-    { color: 'Brown', count: 0 },
-  ]);
+  const [commandHistory, setCommandHistory] = useState<CommandLog[]>([]);
   const { toast } = useToast();
 
   // Simulate connection to ESP32
@@ -45,14 +41,8 @@ export default function DashboardPage() {
     }
     const newStatus = `Following ${color.charAt(0).toUpperCase() + color.slice(1)}`;
     setRobotStatus(newStatus);
-
-    setChartData(prevData => {
-      return prevData.map(item =>
-        item.color.toLowerCase() === color.toLowerCase()
-          ? { ...item, count: item.count + 1 }
-          : item
-      );
-    });
+    
+    setCommandHistory(prevHistory => [...prevHistory, { color, timestamp: new Date() }]);
   };
 
   return (
@@ -65,7 +55,7 @@ export default function DashboardPage() {
             <RealtimeStatus status={robotStatus} />
           </div>
           <div className="lg:col-span-3">
-            <PerformanceChart data={chartData} />
+            <PerformanceChart commandHistory={commandHistory} />
           </div>
         </div>
       </main>
