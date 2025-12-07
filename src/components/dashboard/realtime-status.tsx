@@ -14,9 +14,9 @@ const RealtimeStatus = ({ status }: RealtimeStatusProps) => {
           Robot Status
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex items-center justify-center h-full pb-6">
-        <div className="p-4 text-center bg-primary text-primary-foreground rounded-lg w-full">
-          <p className="text-2xl font-bold">{status}</p>
+      <CardContent className="flex items-center justify-center h-40">
+        <div className="text-center">
+          <p className="text-3xl font-bold">{status}</p>
         </div>
       </CardContent>
     </Card>
