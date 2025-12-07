@@ -8,10 +8,9 @@ type ControlPanelProps = {
 };
 
 const colors = [
-  { name: 'Red', value: 'red', hex: '#ef4444' },
-  { name: 'Green', value: 'green', hex: '#22c55e' },
   { name: 'Blue', value: 'blue', hex: '#3b82f6' },
-  { name: 'Yellow', value: 'yellow', hex: '#eab308' },
+  { name: 'Green', value: 'green', hex: '#22c55e' },
+  { name: 'Brown', value: 'brown', hex: '#a16207' },
 ];
 
 const ControlPanel = ({ onSendCommand, disabled }: ControlPanelProps) => {
@@ -27,7 +26,7 @@ const ControlPanel = ({ onSendCommand, disabled }: ControlPanelProps) => {
         <p className="text-sm text-muted-foreground mb-4">
           Select a color for the robot to follow. Commands are sent instantly.
         </p>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {colors.map((color) => (
             <Button
               key={color.value}
