@@ -21,8 +21,8 @@ const DashboardHeader = ({ isConnected }: DashboardHeaderProps) => {
             className={cn(
               "flex items-center gap-2 rounded-full border px-3 py-1 text-sm font-medium",
               isConnected
-                ? "border-accent/50 bg-accent/20 text-accent-foreground"
-                : "border-destructive/50 bg-destructive/20 text-destructive"
+                ? "border-green-500/50 bg-green-500/20 text-green-700"
+                : "border-red-500/50 bg-red-500/20 text-red-700"
             )}
           >
             {isConnected ? (
@@ -34,7 +34,7 @@ const DashboardHeader = ({ isConnected }: DashboardHeaderProps) => {
             <div
               className={cn(
                 "h-2 w-2 rounded-full",
-                isConnected ? "bg-accent animate-pulse" : "bg-destructive"
+                isConnected ? "bg-green-500 animate-pulse" : "bg-red-500"
               )}
             />
           </div>
