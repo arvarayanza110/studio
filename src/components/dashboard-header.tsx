@@ -39,12 +39,11 @@ const DashboardHeader = ({ isConnected }: DashboardHeaderProps) => {
             />
           </div>
           <Image
-            src="https://picsum.photos/seed/ui-logo/200/50"
+            src="/logo.png"
             alt="Universitas Indonesia Logo"
             width={128}
             height={32}
             className="object-contain"
-            data-ai-hint="university logo"
           />
         </div>
       </div>
