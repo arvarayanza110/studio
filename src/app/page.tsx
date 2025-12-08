@@ -9,9 +9,9 @@ import RealtimeStatus from '@/components/dashboard/realtime-status';
 import PerformanceChart from '@/components/dashboard/performance-chart';
 import { useToast } from '@/hooks/use-toast';
 
-// --- Untuk Integrasi Proyek Nyata ---
-// Ganti dengan alamat IP robot Anda.
-const ROBOT_IP_ADDRESS = "192.168.1.100"; 
+// --- UNTUK INTEGRASI PROYEK NYATA ---
+// Ganti nilai string di bawah ini dengan alamat IP ESP32/robot Anda.
+const ROBOT_IP_ADDRESS = "IP_ESP32_KAMU"; // contoh: "192.168.1.42"
 // ------------------------------------
 
 
@@ -27,9 +27,10 @@ export default function DashboardPage() {
     // Pilih protokol (ws atau wss) berdasarkan protokol halaman
     const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
     const wsUrl = `${protocol}://${ROBOT_IP_ADDRESS}/ws`;
+    
     console.log(`Attempting to connect to robot at ${wsUrl}...`);
     
-    // Ganti URL dengan alamat IP dan port robot Anda.
+    // Inisialisasi koneksi WebSocket
     websocket.current = new WebSocket(wsUrl);
 
     // Saat koneksi berhasil dibuka
@@ -107,7 +108,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
       <DashboardHeader isConnected={isConnected} />
       <main className="flex-1 p-4 sm:p-6 lg:p-8">
         <div className="mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-3 gap-6">
