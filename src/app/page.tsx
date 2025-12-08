@@ -24,10 +24,13 @@ export default function DashboardPage() {
 
   useEffect(() => {
     // --- Logika untuk terhubung ke WebSocket di robot ---
-    console.log(`Attempting to connect to robot at ws://${ROBOT_IP_ADDRESS}/ws...`);
+    // Pilih protokol (ws atau wss) berdasarkan protokol halaman
+    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    const wsUrl = `${protocol}://${ROBOT_IP_ADDRESS}/ws`;
+    console.log(`Attempting to connect to robot at ${wsUrl}...`);
     
     // Ganti URL dengan alamat IP dan port robot Anda.
-    websocket.current = new WebSocket(`ws://${ROBOT_IP_ADDRESS}/ws`);
+    websocket.current = new WebSocket(wsUrl);
 
     // Saat koneksi berhasil dibuka
     websocket.current.onopen = () => {
@@ -37,7 +40,6 @@ export default function DashboardPage() {
       toast({
         title: 'Connection Success',
         description: 'Successfully connected to the robot.',
-        variant: 'default',
       });
     };
 
@@ -105,7 +107,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-gray-50">
       <DashboardHeader isConnected={isConnected} />
       <main className="flex-1 p-4 sm:p-6 lg:p-8">
         <div className="mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-3 gap-6">
