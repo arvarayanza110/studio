@@ -48,9 +48,12 @@ export default function DashboardPage() {
     websocket.current.onmessage = (event) => {
       const message = event.data;
       console.log('Message from robot:', message);
-      // Asumsikan robot mengirim statusnya dalam format "status:Following Blue"
+      
+      // --- Protokol Komunikasi: Robot ke UI ---
+      // Robot HARUS mengirim statusnya dalam format "status:<isi_status>"
+      // Contoh: "status:Following Blue", "status:Idle", "status:Line Not Found"
       if (message.startsWith('status:')) {
-        const newStatus = message.split(':')[1];
+        const newStatus = message.substring(7); // Mengambil teks setelah "status:"
         setRobotStatus(newStatus);
       }
     };
@@ -98,7 +101,9 @@ export default function DashboardPage() {
       return;
     }
     
-    // Kirim perintah ke robot melalui WebSocket
+    // --- Protokol Komunikasi: UI ke Robot ---
+    // UI akan mengirim perintah dalam format "follow:<warna>"
+    // Contoh: "follow:blue", "follow:green"
     const command = `follow:${color}`;
     console.log('Sending command:', command);
     websocket.current.send(command);
