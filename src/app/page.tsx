@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import type { CommandLog } from '@/lib/types';
 
 import DashboardHeader from '@/components/dashboard-header';
@@ -9,29 +9,84 @@ import RealtimeStatus from '@/components/dashboard/realtime-status';
 import PerformanceChart from '@/components/dashboard/performance-chart';
 import { useToast } from '@/hooks/use-toast';
 
+// --- Untuk Integrasi Proyek Nyata ---
+// Ganti dengan alamat IP robot Anda.
+const ROBOT_IP_ADDRESS = "192.168.1.100"; 
+// ------------------------------------
+
+
 export default function DashboardPage() {
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [robotStatus, setRobotStatus] = useState<string>('Connecting...');
   const [commandHistory, setCommandHistory] = useState<CommandLog[]>([]);
   const { toast } = useToast();
+  const websocket = useRef<WebSocket | null>(null);
 
-  // Simulate connection to ESP32
   useEffect(() => {
-    const connectionTimer = setTimeout(() => {
+    // --- Logika untuk terhubung ke WebSocket di robot ---
+    console.log(`Attempting to connect to robot at ws://${ROBOT_IP_ADDRESS}/ws...`);
+    
+    // Ganti URL dengan alamat IP dan port robot Anda.
+    websocket.current = new WebSocket(`ws://${ROBOT_IP_ADDRESS}/ws`);
+
+    // Saat koneksi berhasil dibuka
+    websocket.current.onopen = () => {
+      console.log('WebSocket connection established.');
       setIsConnected(true);
-      setRobotStatus('Idle');
+      setRobotStatus('Connected');
       toast({
         title: 'Connection Success',
         description: 'Successfully connected to the robot.',
         variant: 'default',
       });
-    }, 2000);
-    return () => clearTimeout(connectionTimer);
+    };
+
+    // Saat menerima pesan dari robot
+    websocket.current.onmessage = (event) => {
+      const message = event.data;
+      console.log('Message from robot:', message);
+      // Asumsikan robot mengirim statusnya dalam format "status:Following Blue"
+      if (message.startsWith('status:')) {
+        const newStatus = message.split(':')[1];
+        setRobotStatus(newStatus);
+      }
+    };
+    
+    // Saat koneksi ditutup
+    websocket.current.onclose = () => {
+      console.log('WebSocket connection closed.');
+      setIsConnected(false);
+      setRobotStatus('Disconnected');
+      toast({
+        title: 'Connection Lost',
+        description: 'Disconnected from the robot.',
+        variant: 'destructive',
+      });
+    };
+
+    // Saat terjadi error
+    websocket.current.onerror = (error) => {
+      console.error('WebSocket error:', error);
+      setIsConnected(false);
+      setRobotStatus('Connection Error');
+       toast({
+        title: 'Connection Error',
+        description: 'Could not connect to the robot. Check the IP address and connection.',
+        variant: 'destructive',
+      });
+    };
+
+    // Fungsi cleanup saat komponen di-unmount
+    return () => {
+      if (websocket.current) {
+        websocket.current.close();
+      }
+    };
   }, [toast]);
 
 
   const handleSendCommand = (color: string) => {
-    if (!isConnected) {
+    if (!websocket.current || websocket.current.readyState !== WebSocket.OPEN) {
       toast({
         title: 'Connection Error',
         description: 'Cannot send command. Robot is not connected.',
@@ -39,9 +94,13 @@ export default function DashboardPage() {
       });
       return;
     }
-    const newStatus = `Following ${color.charAt(0).toUpperCase() + color.slice(1)}`;
-    setRobotStatus(newStatus);
     
+    // Kirim perintah ke robot melalui WebSocket
+    const command = `follow:${color}`;
+    console.log('Sending command:', command);
+    websocket.current.send(command);
+
+    // Tambahkan ke riwayat perintah secara optimis
     setCommandHistory(prevHistory => [...prevHistory, { color, timestamp: new Date() }]);
   };
 
