@@ -8,7 +8,15 @@ export type CommandLog = {
   timestamp: Date;
 };
 
-export type RobotStatus = string;
+export type RobotStatus = {
+  main: string;
+  target?: string | number;
+  active?: string | number;
+  lastColor?: string | number;
+  kp?: string | number;
+  ki?: string | number;
+  kd?: string | number;
+};
 
 export type MotorParams = {
   speed_base: number | string;
@@ -16,6 +24,7 @@ export type MotorParams = {
   speed_slow: number | string;
   speed_hard_turn: number | string;
   red_speed_turn: number | string;
+  delay_red_speed_turn: number | string;
   pivot_speed_forward: number | string;
   pivot_speed_backward: number | string;
   turn_90_spin_ms: number | string;

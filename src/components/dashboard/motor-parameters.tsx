@@ -19,6 +19,7 @@ const initialParams: MotorParams = {
   speed_slow: 80,
   speed_hard_turn: 150,
   red_speed_turn: 120,
+  delay_red_speed_turn: 100,
   pivot_speed_forward: 90,
   pivot_speed_backward: 90,
   turn_90_spin_ms: 300,
@@ -30,6 +31,7 @@ const paramLabels: Record<keyof MotorParams, string> = {
   speed_slow: 'Speed Slow',
   speed_hard_turn: 'Speed Hard Turn',
   red_speed_turn: 'Red Speed Turn',
+  delay_red_speed_turn: 'Delay Red Speed Turn',
   pivot_speed_forward: 'Pivot Speed Forward',
   pivot_speed_backward: 'Pivot Speed Backward',
   turn_90_spin_ms: 'Turn 90 Spin (ms)',
@@ -59,7 +61,7 @@ const MotorParameters = ({ onSendParams, disabled }: MotorParametersProps) => {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-x-4 gap-y-3">
-            {(Object.keys(params) as Array<keyof MotorParams>).map((key) => (
+            {(Object.keys(initialParams) as Array<keyof MotorParams>).map((key) => (
               <div key={key} className="grid w-full items-center gap-1.5">
                 <Label htmlFor={key}>{paramLabels[key]}</Label>
                 <Input
