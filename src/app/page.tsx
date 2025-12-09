@@ -11,7 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 
 // --- UNTUK INTEGRASI PROYEK NYATA ---
 // Ganti nilai string di bawah ini dengan alamat IP ESP32/robot Anda.
-const ROBOT_IP_ADDRESS = "IP_ESP32_KAMU"; // contoh: "192.168.1.42"
+const ROBOT_IP_ADDRESS = "10.55.62.99"; // contoh: "192.168.1.42"
 // ------------------------------------
 
 
