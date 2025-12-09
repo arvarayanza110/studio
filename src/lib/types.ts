@@ -8,7 +8,4 @@ export type CommandLog = {
   timestamp: Date;
 };
 
-export type RobotStatus = {
-  main: string;
-  [key: string]: string;
-};
+export type RobotStatus = string;
