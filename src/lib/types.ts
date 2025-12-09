@@ -7,3 +7,8 @@ export type CommandLog = {
   color: string;
   timestamp: Date;
 };
+
+export type RobotStatus = {
+  main: string;
+  [key: string]: string;
+};

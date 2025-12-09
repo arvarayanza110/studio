@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect, useRef } from 'react';
-import type { CommandLog } from '@/lib/types';
+import { useState, useEffect, useRef } from 'react';  
+import type { CommandLog, RobotStatus } from '@/lib/types';
 
 import DashboardHeader from '@/components/dashboard-header';
 import ControlPanel from '@/components/dashboard/control-panel';
@@ -17,7 +17,7 @@ const ROBOT_IP_ADDRESS = "IP_ESP32_KAMU"; // contoh: "192.168.1.42"
 
 export default function DashboardPage() {
   const [isConnected, setIsConnected] = useState<boolean>(false);
-  const [robotStatus, setRobotStatus] = useState<string>('Connecting...');
+  const [robotStatus, setRobotStatus] = useState<RobotStatus>({ main: 'Connecting...' });
   const [commandHistory, setCommandHistory] = useState<CommandLog[]>([]);
   const { toast } = useToast();
   const websocket = useRef<WebSocket | null>(null);
@@ -37,7 +37,7 @@ export default function DashboardPage() {
     websocket.current.onopen = () => {
       console.log('WebSocket connection established.');
       setIsConnected(true);
-      setRobotStatus('Connected');
+      setRobotStatus({ main: 'Connected' });
       toast({
         title: 'Connection Success',
         description: 'Successfully connected to the robot.',
@@ -50,11 +50,25 @@ export default function DashboardPage() {
       console.log('Message from robot:', message);
       
       // --- Protokol Komunikasi: Robot ke UI ---
-      // Robot HARUS mengirim statusnya dalam format "status:<isi_status>"
-      // Contoh: "status:Following Blue", "status:Idle", "status:Line Not Found"
+      // Robot HARUS mengirim statusnya dalam format "status:<data>"
+      // Contoh: "status:FOLLOW_BLACK_BEFORE | target=GREEN | active=BLACK"
       if (message.startsWith('status:')) {
-        const newStatus = message.substring(7); // Mengambil teks setelah "status:"
-        setRobotStatus(newStatus);
+        const statusString = message.substring(7); // Mengambil teks setelah "status:"
+        
+        const parts = statusString.split('|').map(part => part.trim());
+        const mainStatus = parts[0];
+        const details = parts.slice(1).reduce((acc, part) => {
+          const [key, value] = part.split('=');
+          if (key && value) {
+            acc[key.trim()] = value.trim();
+          }
+          return acc;
+        }, {} as Record<string, string>);
+
+        setRobotStatus({
+          main: mainStatus,
+          ...details
+        });
       }
     };
     
@@ -62,7 +76,7 @@ export default function DashboardPage() {
     websocket.current.onclose = () => {
       console.log('WebSocket connection closed.');
       setIsConnected(false);
-      setRobotStatus('Disconnected');
+      setRobotStatus({ main: 'Disconnected' });
       toast({
         title: 'Connection Lost',
         description: 'Disconnected from the robot.',
@@ -74,7 +88,7 @@ export default function DashboardPage() {
     websocket.current.onerror = (error) => {
       console.error('WebSocket error:', error);
       setIsConnected(false);
-      setRobotStatus('Connection Error');
+      setRobotStatus({ main: 'Connection Error' });
        toast({
         title: 'Connection Error',
         description: 'Could not connect to the robot. Check the IP address and connection.',

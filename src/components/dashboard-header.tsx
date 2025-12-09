@@ -1,6 +1,5 @@
 import { Bot, Wifi, WifiOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import Image from 'next/image';
 
 type DashboardHeaderProps = {
   isConnected: boolean;
@@ -21,8 +20,8 @@ const DashboardHeader = ({ isConnected }: DashboardHeaderProps) => {
             className={cn(
               "flex items-center gap-2 rounded-full border px-3 py-1 text-sm font-medium",
               isConnected
-                ? "border-green-500/50 bg-green-500/20 text-green-700"
-                : "border-red-500/50 bg-red-500/20 text-red-700"
+                ? "border-green-500/50 bg-green-500/20 text-green-700 dark:text-green-400"
+                : "border-red-500/50 bg-red-500/20 text-red-700 dark:text-red-400"
             )}
           >
             {isConnected ? (
@@ -38,13 +37,11 @@ const DashboardHeader = ({ isConnected }: DashboardHeaderProps) => {
               )}
             />
           </div>
-          <Image
-            src="/logo.png"
-            alt="Universitas Indonesia Logo"
-            width={128}
-            height={32}
-            className="object-contain"
-          />
+          <div className="text-right text-xs text-muted-foreground">
+            <p className="font-semibold text-foreground">Departemen Teknik Elektro</p>
+            <p>Universitas Indonesia</p>
+            <p>Kelompok 24</p>
+          </div>
         </div>
       </div>
     </header>
