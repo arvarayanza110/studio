@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Bot } from 'lucide-react';
-import type { RobotStatus } from '@/lib/types';
 
 type RealtimeStatusProps = {
   status: string;
