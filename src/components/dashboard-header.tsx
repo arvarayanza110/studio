@@ -1,11 +1,13 @@
 import { Bot, Wifi, WifiOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
 
 type DashboardHeaderProps = {
   isConnected: boolean;
+  status: string;
 };
 
-const DashboardHeader = ({ isConnected }: DashboardHeaderProps) => {
+const DashboardHeader = ({ isConnected, status }: DashboardHeaderProps) => {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-card/80 backdrop-blur-lg">
       <div className="container flex h-16 items-center">
@@ -40,7 +42,7 @@ const DashboardHeader = ({ isConnected }: DashboardHeaderProps) => {
           <div className="text-right text-xs text-muted-foreground">
             <p className="font-semibold text-foreground">Departemen Teknik Elektro</p>
             <p>Universitas Indonesia</p>
-            <p>Kelompok 24</p>
+            <p className="font-bold text-sm">Kelompok 24</p>
           </div>
         </div>
       </div>

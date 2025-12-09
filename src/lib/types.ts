@@ -9,7 +9,7 @@ export type CommandLog = {
 };
 
 export type RobotStatus = {
-  main: string;
+  currentStatus: string;
   target?: string | number;
   active?: string | number;
   lastColor?: string | number;

@@ -16,7 +16,7 @@ const ROBOT_IP_ADDRESS = "IP_ESP32_KAMU"; // contoh: "192.168.1.42"
 // ------------------------------------
 
 const initialRobotStatus: RobotStatus = {
-    main: 'Connecting...',
+    currentStatus: 'Connecting...',
     target: '-',
     active: '-',
     lastColor: '-',
@@ -41,7 +41,7 @@ export default function DashboardPage() {
     websocket.current.onopen = () => {
         console.log('WebSocket connection established.');
         setIsConnected(true);
-        setRobotStatus(prev => ({...prev, main: 'Connected'}));
+        setRobotStatus(prev => ({...prev, currentStatus: 'Connected'}));
         toast({
             title: 'Connection Success',
             description: 'Successfully connected to the robot.',
@@ -54,7 +54,7 @@ export default function DashboardPage() {
 
         // --- Protokol Komunikasi: Robot ke UI ---
         // Robot HARUS mengirim statusnya dalam format JSON string:
-        // 'status:{"main":"Following Line","target":"Blue","active":"PID","lastColor":"Black","lastAction":"Turn Right"}'
+        // 'status:{"currentStatus":"Following Line","target":"Blue","active":"PID","lastColor":"Black","lastAction":"Turn Right"}'
         if (message.startsWith('status:')) {
             try {
                 const statusJson = message.substring(7);
@@ -62,7 +62,7 @@ export default function DashboardPage() {
                 
                 // Update state, pastikan semua key ada
                 setRobotStatus(prevStatus => ({
-                    main: statusObject.main ?? prevStatus.main,
+                    currentStatus: statusObject.currentStatus ?? prevStatus.currentStatus,
                     target: statusObject.target ?? prevStatus.target,
                     active: statusObject.active ?? prevStatus.active,
                     lastColor: statusObject.lastColor ?? prevStatus.lastColor,
@@ -72,7 +72,7 @@ export default function DashboardPage() {
             } catch (error) {
                 console.error("Failed to parse status JSON from robot:", error);
                 // Jika JSON tidak valid, tampilkan pesan mentah sebagai status utama
-                setRobotStatus(prev => ({...initialRobotStatus, main: message}));
+                setRobotStatus(prev => ({...initialRobotStatus, currentStatus: message}));
             }
         }
     };
@@ -80,7 +80,7 @@ export default function DashboardPage() {
     websocket.current.onclose = () => {
         console.log('WebSocket connection closed.');
         setIsConnected(false);
-        setRobotStatus({...initialRobotStatus, main: 'Disconnected'});
+        setRobotStatus({...initialRobotStatus, currentStatus: 'Disconnected'});
         toast({
             title: 'Connection Lost',
             description: 'Disconnected from the robot.',
@@ -91,7 +91,7 @@ export default function DashboardPage() {
     websocket.current.onerror = (error) => {
         console.error('WebSocket error:', error);
         setIsConnected(false);
-        setRobotStatus({...initialRobotStatus, main: 'Connection Error'});
+        setRobotStatus({...initialRobotStatus, currentStatus: 'Connection Error'});
         toast({
             title: 'Connection Error',
             description: 'Could not connect to the robot. Check the IP address and connection.',
@@ -153,7 +153,7 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
-      <DashboardHeader isConnected={isConnected} />
+      <DashboardHeader isConnected={isConnected} status={robotStatus.currentStatus} />
       <main className="flex-1 p-4 sm:p-6 lg:p-8">
         <div className="mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 grid grid-cols-1 gap-6">
