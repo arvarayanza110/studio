@@ -13,9 +13,7 @@ export type RobotStatus = {
   target?: string | number;
   active?: string | number;
   lastColor?: string | number;
-  kp?: string | number;
-  ki?: string | number;
-  kd?: string | number;
+  lastAction?: string | number;
 };
 
 export type MotorParams = {

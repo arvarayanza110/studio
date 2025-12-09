@@ -20,9 +20,7 @@ const initialRobotStatus: RobotStatus = {
     target: '-',
     active: '-',
     lastColor: '-',
-    kp: '-',
-    ki: '-',
-    kd: '-'
+    lastAction: '-',
 };
 
 export default function DashboardPage() {
@@ -56,7 +54,7 @@ export default function DashboardPage() {
 
         // --- Protokol Komunikasi: Robot ke UI ---
         // Robot HARUS mengirim statusnya dalam format JSON string:
-        // 'status:{"main":"Following Line","target":"Blue","kp":50}'
+        // 'status:{"main":"Following Line","target":"Blue","active":"PID","lastColor":"Black","lastAction":"Turn Right"}'
         if (message.startsWith('status:')) {
             try {
                 const statusJson = message.substring(7);
@@ -68,9 +66,7 @@ export default function DashboardPage() {
                     target: statusObject.target ?? prevStatus.target,
                     active: statusObject.active ?? prevStatus.active,
                     lastColor: statusObject.lastColor ?? prevStatus.lastColor,
-                    kp: statusObject.kp ?? prevStatus.kp,
-                    ki: statusObject.ki ?? prevStatus.ki,
-                    kd: statusObject.kd ?? prevStatus.kd,
+                    lastAction: statusObject.lastAction ?? prevStatus.lastAction,
                 }));
 
             } catch (error) {
